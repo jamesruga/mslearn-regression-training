@@ -1,0 +1,1315 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Notebook}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{regression}{%
+\section{Regression}\label{regression}}
+
+\emph{Supervised} machine learning techniques involve training a model
+to operate on a set of \emph{features} and predict a \emph{label} using
+a dataset that includes some already-known label values. The training
+process \emph{fits} the features to the known labels to define a general
+function that can be applied to new features for which the labels are
+unknown, and predict them. You can think of this function like this, in
+which \textbf{\emph{y}} represents the label we want to predict and
+\textbf{\emph{x}} represents the features the model uses to predict it.
+
+\[y = f(x)\]
+
+In most cases, \emph{x} is actually a \emph{vector} that consists of
+multiple feature values, so to be a little more precise, the function
+could be expressed like this:
+
+\[y = f([x_1, x_2, x_3, ...])\]
+
+The goal of training the model is to find a function that performs some
+kind of calculation to the \emph{x} values that produces the result
+\emph{y}. We do this by applying a machine learning \emph{algorithm}
+that tries to fit the \emph{x} values to a calculation that produces
+\emph{y} reasonably accurately for all of the cases in the training
+dataset.
+
+There are lots of machine learning algorithms for supervised learning,
+and they can be broadly divided into two types:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\emph{Regression} algorithms}: Algorithms that predict a
+  \emph{y} value that is a numeric value, such as the price of a house
+  or the number of sales transactions.
+\item
+  \textbf{\emph{Classification} algorithms}: Algorithms that predict to
+  which category, or \emph{class}, an observation belongs. The \emph{y}
+  value in a classification model is a vector of probability values
+  between 0 and 1, one for each class, indicating the probability of the
+  observation belonging to each class.
+\end{itemize}
+
+In this notebook, we'll focus on \emph{regression}, using an example
+based on a real study in which data for a bicycle sharing scheme was
+collected and used to predict the number of rentals based on seasonality
+and weather conditions. We'll use a simplified version of the dataset
+from that study.
+
+\begin{quote}
+\textbf{Citation}: The data used in this exercise is derived from
+\href{https://www.capitalbikeshare.com/system-data}{Capital Bikeshare}
+and is used in accordance with the published
+\href{https://www.capitalbikeshare.com/data-license-agreement}{license
+agreement}.
+\end{quote}
+
+\hypertarget{explore-the-data}{%
+\subsection{Explore the Data}\label{explore-the-data}}
+
+The first step in any machine learning project is to explore the data
+that you will use to train a model. The goal of this exploration is to
+try to understand the relationships between its attributes; in
+particular, any apparent correlation between the \emph{features} and the
+\emph{label} your model will try to predict. This may require some work
+to detect and fix issues in the data (such as dealing with missing
+values, errors, or outlier values), deriving new feature columns by
+transforming or combining existing features (a process known as
+\emph{feature engineering}), \emph{normalizing} numeric features (values
+you can measure or count) so they're on a similar scale, and
+\emph{encoding} categorical features (values that represent discrete
+categories) as numeric indicators.
+
+Let's start by loading the bicycle sharing data as a \textbf{Pandas}
+DataFrame and viewing the first few rows.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+
+\PY{c+c1}{\PYZsh{} load the training dataset}
+\PY{o}{!}wget\PY{+w}{ }https://raw.githubusercontent.com/MicrosoftDocs/mslearn\PYZhy{}introduction\PYZhy{}to\PYZhy{}machine\PYZhy{}learning/main/Data/ml\PYZhy{}basics/daily\PYZhy{}bike\PYZhy{}share.csv
+\PY{n}{bike\PYZus{}data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZhy{}bike\PYZhy{}share.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{bike\PYZus{}data}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+--2023-08-08 14:41:34--
+https://raw.githubusercontent.com/MicrosoftDocs/mslearn-introduction-to-machine-
+learning/main/Data/ml-basics/daily-bike-share.csv
+Resolving raw.githubusercontent.com (raw.githubusercontent.com){\ldots}
+185.199.111.133, 185.199.108.133, 185.199.109.133, {\ldots}
+Connecting to raw.githubusercontent.com
+(raw.githubusercontent.com)|185.199.111.133|:443{\ldots} connected.
+HTTP request sent, awaiting response{\ldots} 200 OK
+Length: 48800 (48K) [text/plain]
+Saving to: ‘daily-bike-share.csv’
+
+daily-bike-share.cs 100\%[===================>]  47.66K  --.-KB/s    in 0.004s
+
+2023-08-08 14:41:34 (11.9 MB/s) - ‘daily-bike-share.csv’ saved [48800/48800]
+
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   instant    dteday  season  yr  mnth  holiday  weekday  workingday  \textbackslash{}
+0        1  1/1/2011       1   0     1        0        6           0
+1        2  1/2/2011       1   0     1        0        0           0
+2        3  1/3/2011       1   0     1        0        1           1
+3        4  1/4/2011       1   0     1        0        2           1
+4        5  1/5/2011       1   0     1        0        3           1
+
+   weathersit      temp     atemp       hum  windspeed  rentals
+0           2  0.344167  0.363625  0.805833   0.160446      331
+1           2  0.363478  0.353739  0.696087   0.248539      131
+2           1  0.196364  0.189405  0.437273   0.248309      120
+3           1  0.200000  0.212122  0.590435   0.160296      108
+4           1  0.226957  0.229270  0.436957   0.186900       82
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The data consists of the following columns:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{instant}: A unique row identifier
+\item
+  \textbf{dteday}: The date on which the data was observed - in this
+  case, the data was collected daily; so there's one row per date.
+\item
+  \textbf{season}: A numerically encoded value indicating the season
+  (1:winter, 2:spring, 3:summer, 4:fall)
+\item
+  \textbf{yr}: The year of the study in which the observation was made
+  (the study took place over two years - year 0 represents 2011, and
+  year 1 represents 2012)
+\item
+  \textbf{mnth}: The calendar month in which the observation was made
+  (1:January \ldots{} 12:December)
+\item
+  \textbf{holiday}: A binary value indicating whether or not the
+  observation was made on a public holiday)
+\item
+  \textbf{weekday}: The day of the week on which the observation was
+  made (0:Sunday \ldots{} 6:Saturday)
+\item
+  \textbf{workingday}: A binary value indicating whether or not the day
+  is a working day (not a weekend or holiday)
+\item
+  \textbf{weathersit}: A categorical value indicating the weather
+  situation (1:clear, 2:mist/cloud, 3:light rain/snow, 4:heavy
+  rain/hail/snow/fog)
+\item
+  \textbf{temp}: The temperature in celsius (normalized)
+\item
+  \textbf{atemp}: The apparent (``feels-like'') temperature in celsius
+  (normalized)
+\item
+  \textbf{hum}: The humidity level (normalized)
+\item
+  \textbf{windspeed}: The windspeed (normalized)
+\item
+  \textbf{rentals}: The number of bicycle rentals recorded.
+\end{itemize}
+
+In this dataset, \textbf{rentals} represents the label (the \emph{y}
+value) our model must be trained to predict. The other columns are
+potential features (\emph{x} values).
+
+As mentioned previously, you can perform some \emph{feature engineering}
+to combine or derive new features. For example, let's add a new column
+named \textbf{day} to the dataframe by extracting the day component from
+the existing \textbf{dteday} column. The new column represents the day
+of the month from 1 to 31.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{day}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DatetimeIndex}\PY{p}{(}\PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dteday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{day}
+\PY{n}{bike\PYZus{}data}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{32}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    instant     dteday  season  yr  mnth  holiday  weekday  workingday  \textbackslash{}
+0         1   1/1/2011       1   0     1        0        6           0
+1         2   1/2/2011       1   0     1        0        0           0
+2         3   1/3/2011       1   0     1        0        1           1
+3         4   1/4/2011       1   0     1        0        2           1
+4         5   1/5/2011       1   0     1        0        3           1
+5         6   1/6/2011       1   0     1        0        4           1
+6         7   1/7/2011       1   0     1        0        5           1
+7         8   1/8/2011       1   0     1        0        6           0
+8         9   1/9/2011       1   0     1        0        0           0
+9        10  1/10/2011       1   0     1        0        1           1
+10       11  1/11/2011       1   0     1        0        2           1
+11       12  1/12/2011       1   0     1        0        3           1
+12       13  1/13/2011       1   0     1        0        4           1
+13       14  1/14/2011       1   0     1        0        5           1
+14       15  1/15/2011       1   0     1        0        6           0
+15       16  1/16/2011       1   0     1        0        0           0
+16       17  1/17/2011       1   0     1        1        1           0
+17       18  1/18/2011       1   0     1        0        2           1
+18       19  1/19/2011       1   0     1        0        3           1
+19       20  1/20/2011       1   0     1        0        4           1
+20       21  1/21/2011       1   0     1        0        5           1
+21       22  1/22/2011       1   0     1        0        6           0
+22       23  1/23/2011       1   0     1        0        0           0
+23       24  1/24/2011       1   0     1        0        1           1
+24       25  1/25/2011       1   0     1        0        2           1
+25       26  1/26/2011       1   0     1        0        3           1
+26       27  1/27/2011       1   0     1        0        4           1
+27       28  1/28/2011       1   0     1        0        5           1
+28       29  1/29/2011       1   0     1        0        6           0
+29       30  1/30/2011       1   0     1        0        0           0
+30       31  1/31/2011       1   0     1        0        1           1
+31       32   2/1/2011       1   0     2        0        2           1
+
+    weathersit      temp     atemp       hum  windspeed  rentals  day
+0            2  0.344167  0.363625  0.805833   0.160446      331    1
+1            2  0.363478  0.353739  0.696087   0.248539      131    2
+2            1  0.196364  0.189405  0.437273   0.248309      120    3
+3            1  0.200000  0.212122  0.590435   0.160296      108    4
+4            1  0.226957  0.229270  0.436957   0.186900       82    5
+5            1  0.204348  0.233209  0.518261   0.089565       88    6
+6            2  0.196522  0.208839  0.498696   0.168726      148    7
+7            2  0.165000  0.162254  0.535833   0.266804       68    8
+8            1  0.138333  0.116175  0.434167   0.361950       54    9
+9            1  0.150833  0.150888  0.482917   0.223267       41   10
+10           2  0.169091  0.191464  0.686364   0.122132       43   11
+11           1  0.172727  0.160473  0.599545   0.304627       25   12
+12           1  0.165000  0.150883  0.470417   0.301000       38   13
+13           1  0.160870  0.188413  0.537826   0.126548       54   14
+14           2  0.233333  0.248112  0.498750   0.157963      222   15
+15           1  0.231667  0.234217  0.483750   0.188433      251   16
+16           2  0.175833  0.176771  0.537500   0.194017      117   17
+17           2  0.216667  0.232333  0.861667   0.146775        9   18
+18           2  0.292174  0.298422  0.741739   0.208317       78   19
+19           2  0.261667  0.255050  0.538333   0.195904       83   20
+20           1  0.177500  0.157833  0.457083   0.353242       75   21
+21           1  0.059130  0.079070  0.400000   0.171970       93   22
+22           1  0.096522  0.098839  0.436522   0.246600      150   23
+23           1  0.097391  0.117930  0.491739   0.158330       86   24
+24           2  0.223478  0.234526  0.616957   0.129796      186   25
+25           3  0.217500  0.203600  0.862500   0.293850       34   26
+26           1  0.195000  0.219700  0.687500   0.113837       15   27
+27           2  0.203478  0.223317  0.793043   0.123300       38   28
+28           1  0.196522  0.212126  0.651739   0.145365      123   29
+29           1  0.216522  0.250322  0.722174   0.073983      140   30
+30           2  0.180833  0.186250  0.603750   0.187192       42   31
+31           2  0.192174  0.234530  0.829565   0.053213       47    1
+\end{Verbatim}
+\end{tcolorbox}
+        
+    OK, let's start our analysis of the data by examining a few key
+descriptive statistics. We can use the dataframe's \textbf{describe}
+method to generate these for the numeric features as well as the
+\textbf{rentals} label column.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{numeric\PYZus{}features} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{temp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{atemp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hum}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{windspeed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{n}{numeric\PYZus{}features} \PY{o}{+} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+             temp       atemp         hum   windspeed      rentals
+count  731.000000  731.000000  731.000000  731.000000   731.000000
+mean     0.495385    0.474354    0.627894    0.190486   848.176471
+std      0.183051    0.162961    0.142429    0.077498   686.622488
+min      0.059130    0.079070    0.000000    0.022392     2.000000
+25\%      0.337083    0.337842    0.520000    0.134950   315.500000
+50\%      0.498333    0.486733    0.626667    0.180975   713.000000
+75\%      0.655417    0.608602    0.730209    0.233214  1096.000000
+max      0.861667    0.840896    0.972500    0.507463  3410.000000
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The statistics reveal some information about the distribution of the
+data in each of the numeric fields, including the number of observations
+(there are 731 records), the mean, standard deviation, minimum and
+maximum values, and the quartile values (the threshold values for 25\%,
+50\% - which is also the median, and 75\% of the data). From this, we
+can see that the mean number of daily rentals is around 848; but there's
+a comparatively large standard deviation, indicating a lot of variance
+in the number of rentals per day.
+
+We might get a clearer idea of the distribution of rentals values by
+visualizing the data. Common plot types for visualizing numeric data
+distributions are \emph{histograms} and \emph{box plots}, so let's use
+Python's \textbf{matplotlib} library to create one of each of these for
+the \textbf{rentals} column.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{c+c1}{\PYZsh{} This ensures plots are displayed inline in the Jupyter notebook}
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+
+\PY{c+c1}{\PYZsh{} Get the label column}
+\PY{n}{label} \PY{o}{=} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+
+\PY{c+c1}{\PYZsh{} Create a figure for 2 subplots (2 rows, 1 column)}
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{figsize} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Plot the histogram   }
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{label}\PY{p}{,} \PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Frequency}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add lines for the mean, median, and mode}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{axvline}\PY{p}{(}\PY{n}{label}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{axvline}\PY{p}{(}\PY{n}{label}\PY{o}{.}\PY{n}{median}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyan}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Plot the boxplot   }
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{boxplot}\PY{p}{(}\PY{n}{label}\PY{p}{,} \PY{n}{vert}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n}{ax}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Add a title to the Figure}
+\PY{n}{fig}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Rental Distribution}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Show the figure}
+\PY{n}{fig}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Matplotlib is building the font cache using fc-list. This may take a moment.
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_7_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The plots show that the number of daily rentals ranges from 0 to just
+over 3,400. However, the mean (and median) number of daily rentals is
+closer to the low end of that range, with most of the data between 0 and
+around 2,200 rentals. The few values above this are shown in the box
+plot as small circles, indicating that they are \emph{outliers} - in
+other words, unusually high or low values beyond the typical range of
+most of the data.
+
+We can do the same kind of visual exploration of the numeric features.
+Let's create a histogram for each of these.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot a histogram for each numeric feature}
+\PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{numeric\PYZus{}features}\PY{p}{:}
+    \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
+    \PY{n}{feature} \PY{o}{=} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{n}{col}\PY{p}{]}
+    \PY{n}{feature}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{100}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{ax}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{axvline}\PY{p}{(}\PY{n}{feature}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{axvline}\PY{p}{(}\PY{n}{feature}\PY{o}{.}\PY{n}{median}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyan}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{col}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_9_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The numeric features seem to be more \emph{normally} distributed, with
+the mean and median nearer the middle of the range of values, coinciding
+with where the most commonly occurring values are.
+
+\begin{quote}
+\textbf{Note}: The distributions are not truly \emph{normal} in the
+statistical sense, which would result in a smooth, symmetric
+``bell-curve'' histogram with the mean and mode (the most common value)
+in the center; but they do generally indicate that most of the
+observations have a value somewhere near the middle.
+\end{quote}
+
+We've explored the distribution of the numeric values in the dataset,
+but what about the categorical features? These aren't continuous numbers
+on a scale, so we can't use histograms; but we can plot a bar chart
+showing the count of each discrete value for each category.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+
+\PY{c+c1}{\PYZsh{} plot a bar plot for each categorical feature count}
+\PY{n}{categorical\PYZus{}features} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{season}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mnth}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{holiday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weekday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{workingday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weathersit}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{day}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{categorical\PYZus{}features}\PY{p}{:}
+    \PY{n}{counts} \PY{o}{=} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}index}\PY{p}{(}\PY{p}{)}
+    \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
+    \PY{n}{counts}\PY{o}{.}\PY{n}{plot}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{ax} \PY{o}{=} \PY{n}{ax}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{steelblue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{col} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ counts}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{n}{col}\PY{p}{)} 
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Frequency}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_5.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_6.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Many of the categorical features show a more or less \emph{uniform}
+distribution (meaning there's roughly the same number of rows for each
+category). Exceptions to this include:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{holiday}: There are many fewer days that are holidays than
+  days that aren't.
+\item
+  \textbf{workingday}: There are more working days than non-working
+  days.
+\item
+  \textbf{weathersit}: Most days are category \emph{1} (clear), with
+  category \emph{2} (mist and cloud) the next most common. There are
+  comparatively few category \emph{3} (light rain or snow) days, and no
+  category \emph{4} (heavy rain, hail, or fog) days at all.
+\end{itemize}
+
+Now that we know something about the distribution of the data in our
+columns, we can start to look for relationships between the features and
+the \textbf{rentals} label we want to be able to predict.
+
+For the numeric features, we can create scatter plots that show the
+intersection of feature and label values. We can also calculate the
+\emph{correlation} statistic to quantify the apparent relationship..
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{numeric\PYZus{}features}\PY{p}{:}
+    \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
+    \PY{n}{feature} \PY{o}{=} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{n}{col}\PY{p}{]}
+    \PY{n}{label} \PY{o}{=} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{correlation} \PY{o}{=} \PY{n}{feature}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{n}{label}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n}{feature}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{n}{label}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{n}{col}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bike Rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rentals vs }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n}{col} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{} correlation: }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{correlation}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The results aren't conclusive, but if you look closely at the scatter
+plots for \textbf{temp} and \textbf{atemp}, you can see a vague diagonal
+trend showing that higher rental counts tend to coincide with higher
+temperatures; and a correlation value of just over 0.5 for both of these
+features supports this observation. Conversely, the plots for
+\textbf{hum} and \textbf{windspeed} show a slightly negative
+correlation, indicating that there are fewer rentals on days with high
+humidity or windspeed.
+
+Now let's compare the categorical features to the label. We'll do this
+by creating box plots that show the distribution of rental counts for
+each category.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} plot a boxplot for the label by each categorical feature}
+\PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{categorical\PYZus{}features}\PY{p}{:}
+    \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+    \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
+    \PY{n}{bike\PYZus{}data}\PY{o}{.}\PY{n}{boxplot}\PY{p}{(}\PY{n}{column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{by} \PY{o}{=} \PY{n}{col}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{ax}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Label by }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n}{col}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Bike Rentals}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/anaconda/envs/azureml\_py38/lib/python3.8/site-
+packages/matplotlib/cbook/\_\_init\_\_.py:1376: VisibleDeprecationWarning: Creating
+an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-
+tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant
+to do this, you must specify 'dtype=object' when creating the ndarray.
+  X = np.atleast\_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_3.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_4.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_5.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_6.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_7.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The plots show some variance in the relationship between some category
+values and rentals. For example, there's a clear difference in the
+distribution of rentals on weekends (\textbf{weekday} 0 or 6) and those
+during the working week (\textbf{weekday} 1 to 5). Similarly, there are
+notable differences for \textbf{holiday} and \textbf{workingday}
+categories. There's a noticeable trend that shows different rental
+distributions in spring and summer months compared to winter and fall
+months. The \textbf{weathersit} category also seems to make a difference
+in rental distribution. The \textbf{day} feature we created for the day
+of the month shows little variation, indicating that it's probably not
+predictive of the number of rentals.
+
+    \hypertarget{train-a-regression-model}{%
+\subsection{Train a Regression Model}\label{train-a-regression-model}}
+
+Now that we've explored the data, it's time to use it to train a
+regression model that uses the features we've identified as potentially
+predictive to predict the \textbf{rentals} label. The first thing we
+need to do is to separate the features we want to use to train the model
+from the label we want it to predict.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Separate features and labels}
+\PY{n}{X}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{season}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mnth}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{holiday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weekday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{workingday}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{weathersit}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{temp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{atemp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hum}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{windspeed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{values}\PY{p}{,} \PY{n}{bike\PYZus{}data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rentals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Features:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{X}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Labels:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{,} \PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Features:
+[[1.        1.        0.        6.        0.        2.        0.344167
+  0.363625  0.805833  0.160446 ]
+ [1.        1.        0.        0.        0.        2.        0.363478
+  0.353739  0.696087  0.248539 ]
+ [1.        1.        0.        1.        1.        1.        0.196364
+  0.189405  0.437273  0.248309 ]
+ [1.        1.        0.        2.        1.        1.        0.2
+  0.212122  0.590435  0.160296 ]
+ [1.        1.        0.        3.        1.        1.        0.226957
+  0.22927   0.436957  0.1869   ]
+ [1.        1.        0.        4.        1.        1.        0.204348
+  0.233209  0.518261  0.0895652]
+ [1.        1.        0.        5.        1.        2.        0.196522
+  0.208839  0.498696  0.168726 ]
+ [1.        1.        0.        6.        0.        2.        0.165
+  0.162254  0.535833  0.266804 ]
+ [1.        1.        0.        0.        0.        1.        0.138333
+  0.116175  0.434167  0.36195  ]
+ [1.        1.        0.        1.        1.        1.        0.150833
+  0.150888  0.482917  0.223267 ]]
+
+Labels:
+[331 131 120 108  82  88 148  68  54  41]
+    \end{Verbatim}
+
+    After separating the dataset, we now have numpy arrays named \textbf{X}
+containing the features, and \textbf{y} containing the labels.
+
+We \emph{could} train a model using all of the data; but it's common
+practice in supervised learning to split the data into two subsets; a
+(typically larger) set with which to train the model, and a smaller
+``hold-back'' set with which to validate the trained model. This enables
+us to evaluate how well the model performs when used with the validation
+dataset by comparing the predicted labels to the known labels. It's
+important to split the data \emph{randomly} (rather than say, taking the
+first 70\% of the data for training and keeping the rest for
+validation). This helps ensure that the two subsets of data are
+statistically comparable (so we validate the model with data that has a
+similar statistical distribution to the data on which it was trained).
+
+To randomly split the data, we'll use the \textbf{train\_test\_split}
+function in the \textbf{scikit-learn} library. This library is one of
+the most widely used machine learning packages for Python.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+
+\PY{c+c1}{\PYZsh{} Split data 70\PYZpc{}\PYZhy{}30\PYZpc{} into training set and test set}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.30}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+
+\PY{n+nb}{print} \PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Training Set: }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s1}{ rows}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Test Set: }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s1}{ rows}\PY{l+s+s1}{\PYZsq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Training Set: 511 rows
+Test Set: 220 rows
+    \end{Verbatim}
+
+    Now we have the following four datasets:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{X\_train}: The feature values we'll use to train the model
+\item
+  \textbf{y\_train}: The corresponding labels we'll use to train the
+  model
+\item
+  \textbf{X\_test}: The feature values we'll use to validate the model
+\item
+  \textbf{y\_test}: The corresponding labels we'll use to validate the
+  model
+\end{itemize}
+
+Now we're ready to train a model by fitting a suitable regression
+algorithm to the training data. We'll use a \emph{linear regression}
+algorithm, a common starting point for regression that works by trying
+to find a linear relationship between the \emph{X} values and the
+\emph{y} label. The resulting model is a function that conceptually
+defines a line where every possible X and y value combination intersect.
+
+In Scikit-Learn, training algorithms are encapsulated in
+\emph{estimators}, and in this case we'll use the
+\textbf{LinearRegression} estimator to train a linear regression model.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Train the model}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+
+\PY{c+c1}{\PYZsh{} Fit a linear regression model on the training set}
+\PY{n}{model} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n+nb}{print} \PY{p}{(}\PY{n}{model}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+LinearRegression(copy\_X=True, fit\_intercept=True, n\_jobs=None, normalize=False)
+    \end{Verbatim}
+
+    \hypertarget{evaluate-the-trained-model}{%
+\subsubsection{Evaluate the Trained
+Model}\label{evaluate-the-trained-model}}
+
+Now that we've trained the model, we can use it to predict rental counts
+for the features we held back in our validation dataset. Then we can
+compare these predictions to the actual label values to evaluate how
+well (or not!) the model is working.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+
+\PY{n}{predictions} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{suppress}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Predicted labels: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{round}\PY{p}{(}\PY{n}{predictions}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Actual labels   : }\PY{l+s+s1}{\PYZsq{}} \PY{p}{,}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Predicted labels:  [1896. 1184. 1007.  -28.  314.  385.  475.  590. 1476.  -22.]
+Actual labels   :  [2418  754  222   47  244  145  240  555 3252   38]
+    \end{Verbatim}
+
+    Comparing each prediction with its corresponding ``ground truth'' actual
+value isn't a very efficient way to determine how well the model is
+predicting. Let's see if we can get a better indication by visualizing a
+scatter plot that compares the predictions to the actual labels. We'll
+also overlay a trend line to get a general sense for how well the
+predicted labels align with the true labels.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Actual Labels}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Predicted Labels}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Daily Bike Share Predictions}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} overlay the regression line}
+\PY{n}{z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{polyfit}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{p} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{poly1d}\PY{p}{(}\PY{n}{z}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,}\PY{n}{p}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_26_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    There's a definite diagonal trend, and the intersections of the
+predicted and actual values are generally following the path of the
+trend line; but there's a fair amount of difference between the ideal
+function represented by the line and the results. This variance
+represents the \emph{residuals} of the model - in other words, the
+difference between the label predicted when the model applies the
+coefficients it learned during training to the validation data, and the
+actual value of the validation label. These residuals when evaluated
+from the validation data indicate the expected level of \emph{error}
+when the model is used with new data for which the label is unknown.
+
+You can quantify the residuals by calculating a number of commonly used
+evaluation metrics. We'll focus on the following three:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Mean Square Error (MSE)}: The mean of the squared differences
+  between predicted and actual values. This yields a relative metric in
+  which the smaller the value, the better the fit of the model
+\item
+  \textbf{Root Mean Square Error (RMSE)}: The square root of the MSE.
+  This yields an absolute metric in the same unit as the label (in this
+  case, numbers of rentals). The smaller the value, the better the model
+  (in a simplistic sense, it represents the average number of rentals by
+  which the predictions are wrong!)
+\item
+  \textbf{Coefficient of Determination (usually known as
+  \emph{R-squared} or R2}): A relative metric in which the higher the
+  value, the better the fit of the model. In essence, this metric
+  represents how much of the variance between predicted and actual label
+  values the model is able to explain.
+\end{itemize}
+
+\begin{quote}
+\textbf{Note}: You can find out more about these and other metrics for
+evaluating regression models in the
+\href{https://scikit-learn.org/stable/modules/model_evaluation.html\#regression-metrics}{Scikit-Learn
+documentation}
+\end{quote}
+
+Let's use Scikit-Learn to calculate these metrics for our model, based
+on the predictions it generated for the validation data.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k+kn}{import} \PY{n}{mean\PYZus{}squared\PYZus{}error}\PY{p}{,} \PY{n}{r2\PYZus{}score}
+
+\PY{n}{mse} \PY{o}{=} \PY{n}{mean\PYZus{}squared\PYZus{}error}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{MSE:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{mse}\PY{p}{)}
+
+\PY{n}{rmse} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{mse}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{RMSE:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{rmse}\PY{p}{)}
+
+\PY{n}{r2} \PY{o}{=} \PY{n}{r2\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R2:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{r2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+MSE: 201972.55947035592
+RMSE: 449.4135728595165
+R2: 0.6040454736919191
+    \end{Verbatim}
+
+    So now we've quantified the ability of our model to predict the number
+of rentals. It definitely has \emph{some} predictive power, but we can
+probably do better!
+
+\hypertarget{summary}{%
+\subsection{Summary}\label{summary}}
+
+Here we've explored our data and fit a basic regression model. In the
+next notebook, we will try a number of other regression algorithms to
+improve performance
+
+\hypertarget{further-reading}{%
+\subsection{Further Reading}\label{further-reading}}
+
+To learn more about Scikit-Learn, see the
+\href{https://scikit-learn.org/stable/modules/model_evaluation.html\#regression-metrics}{Scikit-Learn
+documentation}.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
